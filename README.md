@@ -9,6 +9,10 @@ Less comes with two compilers, a client compiler that uses less.js and a server 
 
 * [Node.js](http://nodejs.org/download/) and [lessc](http://lesscss.org/#usage) to use the server-side compiler
 
+### Credits
+
+Thanks to my friend Sam Stenvall (negge) for providing me with his version of the server-side compiler.
+
 ## Usage
 
 ### Setup
