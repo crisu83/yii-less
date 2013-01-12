@@ -4,7 +4,7 @@
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  * @copyright Copyright &copy; Christoffer Niska 2013-
  * @license http://www.opensource.org/licenses/bsd-license.php New BSD License
- * @version 2.0.0
+ * @version 1.0.0
  */
 
 /**
