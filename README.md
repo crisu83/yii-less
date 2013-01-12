@@ -17,7 +17,7 @@ Thanks to my friend Sam Stenvall (negge) for providing me with his version of th
 
 ### Setup
 
-Download the latest version from [Yii extension](http://www.yiiframework.com/extension/less).
+Download the latest version from [Yii extensions](http://www.yiiframework.com/extension/less).
 
 Unzip the extension under ***protected/extensions/less*** and add the less component to your application configuration. 
 Below you can find example configurations for both compilers.
