@@ -80,7 +80,6 @@ Below you can find a list of the available configurations (with default values) 
   'mode'=>'client' // client or server
   'files'=>array( // files to compile (relative from your base path)
     'less/styles.less'=>'css/styles.less',
-    .....
   ),
   'options'=>array( // compiler options
     'env'=>'production', // compiler environment, either production or development
@@ -101,7 +100,6 @@ Below you can find a list of the available configurations (with default values) 
   'mode'=>'server' // client or server
   'files'=>array( // files to compile (relative from your base path)
     'less/styles.less'=>'css/styles.less',
-    .....
   ),
   'options'=>array( // compiler options
     'basePath'=>'path/to/webroot', // base path, defaults to webroot
