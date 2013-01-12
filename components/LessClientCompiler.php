@@ -4,7 +4,6 @@
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  * @copyright Copyright &copy; Christoffer Niska 2013-
  * @license http://www.opensource.org/licenses/bsd-license.php New BSD License
- * @version 2.0.0
  */
 
 /**
@@ -34,7 +33,7 @@ class LessClientCompiler extends LessCompiler
 	 */
 	public $fileAsync = false;
 	/**
-	 * @var integer when in match mode, time in ms between polls.
+	 * @var integer when in match mode, time in ms between polls (defaults to 1000).
 	 */
 	public $poll = 1000;
 	/**
@@ -50,7 +49,23 @@ class LessClientCompiler extends LessCompiler
 	 */
 	public $forceCopyAssets = false;
 
-	protected $_assetsUrl;
+	private $_assetsUrl;
+
+	/**
+	 * Initializes the component.
+	 * @throws CException if initialization fails.
+	 */
+	public function init()
+	{
+		parent::init();
+
+		if (!in_array($this->env, array(self::ENV_DEVELOPMENT, self::ENV_PRODUCTION)))
+			throw new CException('Failed to initialize LESS compiler. Property env must be either "development" or "production".');
+
+		if (isset($this->dumpLineNumbers)
+				&& !in_array($this->dumpLineNumbers, array(self::DLN_COMMENTS, self::DLN_MEDIAQUERY, self::DLN_ALL)))
+			throw new CException('Failed to initialize LESS compiler. Property dumpLineNumber must be "comments", "mediaQuery" or "all".');
+	}
 
 	/**
 	 * Runs the compiler.
@@ -58,13 +73,6 @@ class LessClientCompiler extends LessCompiler
 	 */
 	public function run()
 	{
-		if (!in_array($this->env, array(self::ENV_DEVELOPMENT, self::ENV_PRODUCTION)))
-			throw new CException('Failed to compile LESS. Property env must be either "development" or "production".');
-
-		if (isset($this->dumpLineNumbers)
-				&& !in_array($this->dumpLineNumbers, array(self::DLN_COMMENTS, self::DLN_MEDIAQUERY, self::DLN_ALL)))
-			throw new CException('Failed to compile LESS. Property dumpLineNumber must be "comments", "mediaQuery" or "all".');
-
 		$app = Yii::app();
 		foreach ($this->files as $lessFile => $cssFile)
 			echo CHtml::linkTag('stylesheet/less', 'text/css', $app->baseUrl . '/' . $lessFile);

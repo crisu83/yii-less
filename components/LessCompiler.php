@@ -25,6 +25,16 @@ abstract class LessCompiler extends CComponent
 	public $relativeUrls = false;
 
 	/**
+	 * Initializes the component.
+	 * @throws CException if initialization fails.
+	 */
+	public function init()
+	{
+		if (!is_array($this->files))
+			throw new CException('Failed to compile LESS. Property files must be an array.');
+	}
+
+	/**
 	 * Runs the compiler.
 	 */
 	abstract public function run();

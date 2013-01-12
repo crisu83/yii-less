@@ -48,6 +48,22 @@ class LessServerCompiler extends LessCompiler
 	public $forceCompile = false;
 
 	/**
+	 * Initializes the component.
+	 * @throws CException if initialization fails.
+	 */
+	public function init()
+	{
+		parent::init();
+
+		if ($this->compression !== false
+				&& !in_array($this->compression, array(self::COMPRESSION_WHITESPACE, self::COMPRESSION_YUI)))
+			throw new CException('Failed to initialize LESS compiler. Property compression must be either "whitespace" or "yui".');
+
+		if ($this->optimizationLevel !== false && !in_array($this->optimizationLevel, array(0, 1, 2)))
+			throw new CException('Failed to initialize LESS compiler. Property optimizationLevel must be 0, 1 or 2.');
+	}
+
+	/**
 	 * Runs the compiler.
 	 * @throws CException if an error occurred.
 	 */
@@ -55,13 +71,6 @@ class LessServerCompiler extends LessCompiler
 	{
 		if (!isset($this->basePath))
 			$this->basePath = Yii::getPathOfAlias('webroot');
-
-		if ($this->compression !== false
-				&& !in_array($this->compression, array(self::COMPRESSION_WHITESPACE, self::COMPRESSION_YUI)))
-			throw new CException('Failed to compile LESS. Property compression must be either "whitespace" or "yui".');
-
-		if ($this->optimizationLevel !== false && !in_array($this->optimizationLevel, array(0, 1, 2)))
-			throw new CException('Failed to compile LESS. Property optimizationLevel must be 0, 1 or 2.');
 
 		foreach ($this->files as $lessFile => $cssFile)
 		{

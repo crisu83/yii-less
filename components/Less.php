@@ -33,8 +33,6 @@ class Less extends CApplicationComponent
 	 */
 	public $files = array();
 
-	private $_compiler;
-
 	/**
 	 * Initializes the component.
 	 */
@@ -45,9 +43,9 @@ class Less extends CApplicationComponent
 	}
 
 	/**
-	 * Compiles the registered LESS files.
+	 * Registered LESS files.
 	 */
-	public function compile()
+	public function register()
 	{
 		if (!in_array($this->mode, array(self::MODE_CLIENT, self::MODE_SERVER)))
 			throw new CException('Failed to compile LESS. Mode must be either "client" or "server".');
@@ -56,8 +54,9 @@ class Less extends CApplicationComponent
 		$config['class'] = $this->mode === self::MODE_SERVER ? self::COMPILER_SERVER : self::COMPILER_CLIENT;
 		$config['files'] = $this->files;
 
-		$this->_compiler = Yii::createComponent($config);
-		$this->_compiler->run();
+		$compiler = Yii::createComponent($config);
+		$compiler->init();
+		$compiler->run();
 	}
 
 	/**
@@ -66,6 +65,6 @@ class Less extends CApplicationComponent
 	 */
 	public function getVersion()
 	{
-		return '2.0.0';
+		return '1.0.0';
 	}
 }
