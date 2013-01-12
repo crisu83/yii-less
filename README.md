@@ -27,6 +27,7 @@ Below you can find example configurations for both compilers.
 ```php
 return array(
   'components'=>array(
+    .....
     'less'=>array(
       'class'=>'ext.less.components.Less',
       'mode'=>'client'
@@ -58,9 +59,17 @@ return array(
 );
 ```
 
+Now register the less component inside the ***\<head\>*** tag in the layout where you wish to include the stylesheets:
+
+```php
+<head>
+  <?php Yii::app()->less->register(); ?>
+</head>
+```
+***protected/views/layouts/main.php***
+
 ### Configuration
 
-Configure the extension to suit your needs. 
 Below you can find a list of the available configurations (with default values) for each compiler.
 
 #### Client-side
