@@ -39,6 +39,9 @@ return array(
 
 #### Server-side
 
+In order to compile your LESS server-side you need to download and install [Node.js](http://nodejs.org/download/). 
+When you have installed Node.js use npm (Node Packaged Modules) to download lessc.
+
 ```php
 return array(
   'components'=>array(
@@ -56,15 +59,6 @@ return array(
   ),
 );
 ```
-
-Now register the less component inside the ***\<head\>*** tag in the layout where you wish to include the stylesheets:
-
-```php
-<head>
-  <?php Yii::app()->less->register(); ?>
-</head>
-```
-***protected/views/layouts/main.php***
 
 ### Configuration
 
@@ -110,3 +104,15 @@ Below you can find a list of the available configurations (with default values) 
   ),
 ),
 ```
+
+### Registering the compiler
+
+When you have everything setup and configured you need to register the compiler.
+To do that, call its register method inside the ***\<head\>*** tag in the layout(s) in which you wish to include the stylesheets.
+
+```php
+<head>
+  <?php Yii::app()->less->register(); ?>
+</head>
+```
+***protected/views/layouts/main.php***
