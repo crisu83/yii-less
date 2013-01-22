@@ -40,7 +40,7 @@ return array(
 #### Server-side
 
 In order to compile your LESS server-side you need to download and install [Node.js](http://nodejs.org/download/). 
-When you have installed Node.js use npm (Node Packaged Modules) to download lessc.
+When you have installed Node.js use npm (Node Packaged Modules) to download less.
 
 ```php
 return array(
