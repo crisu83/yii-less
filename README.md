@@ -7,7 +7,7 @@ Less comes with two compilers, a client compiler that uses less.js and a server 
 
 ### Requirements
 
-* [Node.js](http://nodejs.org/download/) and [lessc](http://lesscss.org/#usage) to use the server-side compiler
+* [Node.js](http://nodejs.org/download/) and [less](http://lesscss.org/#usage) to use the server-side compiler
 
 ### Credits
 
