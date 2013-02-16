@@ -1,6 +1,6 @@
 {
     "name": "crisu83/yii-less",
-    "description": "Yii extension for compiling LESS files client and server-side.",
+    "description": "LESS compilers for the Yii PHP framework.",
     "keywords": ["less"],
     "type": "yii-extension",
     "license": "BSD-3-Clause",
