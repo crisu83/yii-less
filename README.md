@@ -7,7 +7,7 @@ Less comes with two compilers, a client compiler that uses less.js and a server 
 
 ### Requirements
 
-* [Node.js](http://nodejs.org/download/) and [lessc](http://lesscss.org/#usage) to use the server-side compiler
+* [Node.js](http://nodejs.org/download/) and [less](http://lesscss.org/#usage) to use the server-side compiler
 
 ### Credits
 
@@ -40,7 +40,7 @@ return array(
 #### Server-side
 
 In order to compile your LESS server-side you need to download and install [Node.js](http://nodejs.org/download/). 
-When you have installed Node.js use npm (Node Packaged Modules) to download lessc.
+When you have installed Node.js use npm (Node Packaged Modules) to install the less module.
 
 ```php
 return array(
