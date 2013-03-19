@@ -9,7 +9,7 @@
 /**
  * Base class for LESS compilers.
  */
-abstract class LessCompiler extends CComponent
+abstract class LessCompiler extends CApplicationComponent
 {
 	/**
 	 * @var array a list of files to compile (lessPath => cssPath).
@@ -32,6 +32,8 @@ abstract class LessCompiler extends CComponent
 	{
 		if (!is_array($this->files))
 			throw new CException('Failed to compile LESS. Property files must be an array.');
+		
+		$this->run();
 	}
 
 	/**

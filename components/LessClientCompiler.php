@@ -6,6 +6,8 @@
  * @license http://www.opensource.org/licenses/bsd-license.php New BSD License
  */
 
+require_once 'LessCompiler.php';
+
 /**
  * Client-side LESS compiler.
  */
@@ -57,14 +59,14 @@ class LessClientCompiler extends LessCompiler
 	 */
 	public function init()
 	{
-		parent::init();
-
 		if (!in_array($this->env, array(self::ENV_DEVELOPMENT, self::ENV_PRODUCTION)))
 			throw new CException('Failed to initialize LESS compiler. Property env must be either "development" or "production".');
 
 		if (isset($this->dumpLineNumbers)
 				&& !in_array($this->dumpLineNumbers, array(self::DLN_COMMENTS, self::DLN_MEDIAQUERY, self::DLN_ALL)))
 			throw new CException('Failed to initialize LESS compiler. Property dumpLineNumber must be "comments", "mediaQuery" or "all".');
+		
+		parent::init();
 	}
 
 	/**
@@ -74,7 +76,7 @@ class LessClientCompiler extends LessCompiler
 	public function run()
 	{
 		$app = Yii::app();
-		foreach ($this->files as $lessFile => $cssFile)
+		foreach (array_keys($this->files) as $lessFile)
 			echo CHtml::linkTag('stylesheet/less', 'text/css', $app->baseUrl . '/' . $lessFile);
 
 		$settings = array(
@@ -91,7 +93,7 @@ class LessClientCompiler extends LessCompiler
 		$cs->registerScript(__CLASS__ . '.settings', 'less = ' . CJSON::encode($settings) . ';', CClientScript::POS_HEAD);
 		$cs->registerScriptFile($this->getAssetsUrl().'/less.min.js', CClientScript::POS_END);
 
-		if ($this->watch === true)
+		if ($this->watch)
 			$cs->registerScript(__CLASS__ . '.watch', 'less.watch();', CClientScript::POS_END);
 	}
 
@@ -101,13 +103,12 @@ class LessClientCompiler extends LessCompiler
 	 */
 	protected function getAssetsUrl()
 	{
-		if (isset($this->_assetsUrl))
-			return $this->_assetsUrl;
-		else
+		if (!isset($this->_assetsUrl))
 		{
 			$path = dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'assets';
-			$assetsUrl = Yii::app()->assetManager->publish($path, false, -1, $this->forceCopyAssets);
-			return $this->_assetsUrl = $assetsUrl;
+			$this->_assetsUrl = Yii::app()->assetManager->publish($path, false, -1, $this->forceCopyAssets);
 		}
+		
+		return $this->_assetsUrl;
 	}
 }
