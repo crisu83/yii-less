@@ -93,8 +93,6 @@ class LessServerCompiler extends LessCompiler
 
 				$this->compileFile($lessPath, $cssPath);
 			}
-
-			echo CHtml::linkTag('stylesheet', 'text/css', Yii::app()->baseUrl . '/' . $cssFile);
 		}
 	}
 	

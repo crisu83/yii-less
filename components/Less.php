@@ -40,13 +40,7 @@ class Less extends CApplicationComponent
 	{
 		Yii::setPathOfAlias('less', dirname(__FILE__) . DIRECTORY_SEPARATOR . '..');
 		Yii::import('less.components.*');
-	}
-
-	/**
-	 * Registered LESS files.
-	 */
-	public function register()
-	{
+		
 		if (!in_array($this->mode, array(self::MODE_CLIENT, self::MODE_SERVER)))
 			throw new CException('Failed to compile LESS. Mode must be either "client" or "server".');
 
