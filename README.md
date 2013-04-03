@@ -1,7 +1,7 @@
 yii-less
 ========
 
-Less is an extension for the [Yii PHP framework](http://www.yiiframework.com) that allows developers to compile [LESS](http://www.lesscss.org) files into CSS using the native JavaScript compiler.
+Less is an extension for the [Yii PHP framework](http://www.yiiframework.com) that allows developers to compile [LESS](http://wwwcss.org) files into CSS using the native JavaScript compiler.
 LESS can be compiled both client-side using less.js and server-side using lessc. 
 Less comes with two compilers, a client compiler that uses less.js and a server compiler that uses lessc.
 
@@ -30,7 +30,7 @@ return array(
       'class'=>'ext.less.components.Less',
       'mode'=>'client'
       'files'=>array(
-        'less/styles.less'=>'css/styles.less',
+        'less/styles.less'=>'css/styles.css',
       ),
     ),
   ),
@@ -49,7 +49,7 @@ return array(
       'class'=>'ext.less.components.Less',
       'mode'=>'server'
       'files'=>array(
-        'less/styles.less'=>'css/styles.less',
+        'less/styles.less'=>'css/styles.css',
       ),
       'options'=>array(
         'nodePath'=>'path/to/node.exe',
@@ -71,7 +71,7 @@ Below you can find a list of the available configurations (with default values) 
   'class'=>'ext.less.components.Less',
   'mode'=>'client' // client or server
   'files'=>array( // files to compile (relative from your base path)
-    'less/styles.less'=>'css/styles.less',
+    'less/styles.less'=>'css/styles.css',
   ),
   'options'=>array( // compiler options
     'env'=>'production', // compiler environment, either production or development
@@ -91,7 +91,7 @@ Below you can find a list of the available configurations (with default values) 
   'class'=>'ext.less.components.Less',
   'mode'=>'server' // client or server
   'files'=>array( // files to compile (relative from your base path)
-    'less/styles.less'=>'css/styles.less',
+    'less/styles.less'=>'css/styles.css',
   ),
   'options'=>array( // compiler options
     'basePath'=>'path/to/webroot', // base path, defaults to webroot
