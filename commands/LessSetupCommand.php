@@ -33,6 +33,16 @@ EOS;
     public function run($args)
     {
         $component = Yii::app()->getComponent('less');
+
+        if (!$component) {
+            echo "\nWarning: LESS compiler component not found...\n";
+            return;
+        }
+        if (!$component->files) {
+            echo "\nNotice: LESS compiler property 'files' is empty...\n";
+            return;
+        }
+
         echo "\nChecking output folder(s) and permissions for LESS compiler...\n";
         foreach ($component->files AS $file) {
             $file = realpath(Yii::getPathOfAlias('webroot') . DIRECTORY_SEPARATOR . $file);
