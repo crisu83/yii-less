@@ -125,14 +125,16 @@ class LessServerCompiler extends LessCompiler
 		if ($this->relativeUrls === true)
 			$options[] = '--relative-urls';
 
-		$command = '"' . $this->nodePath . '" "' . $this->compilerPath . '" '
-				. implode(' ', $options) . ' "' . $lessPath . '" "' . $cssPath . '"';
+		$nodePath = $this->nodePath? '"' . $this->nodePath . '" ' : '';
+		$command = $nodePath . '"' . $this->compilerPath . '" '
+			. implode(' ', $options) . ' "' . $lessPath . '" "' . $cssPath . '"';
 
 		$return = 0;
 		$output = array();
 		@exec($command, $output, $return);
 
 		if ($return !== 0)
-			throw new CException('Failed to compile file "' . $lessPath . '" using command: ' . $command);
+			throw new CException(
+				'Failed to compile file "' . $lessPath . '" using command: ' . $command . '. Return was: ' . $return);
 	}
 }
