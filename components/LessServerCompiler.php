@@ -27,7 +27,7 @@ class LessServerCompiler extends LessCompiler
 	/**
 	 * @var string absolute path to the compiler.
 	 */
-	public $compilerPath;
+	public $compilerPath = 'lessc';
 	/**
 	 * @var boolean whether to force evaluation of imports.
 	 */
@@ -83,10 +83,13 @@ class LessServerCompiler extends LessCompiler
 					|| filemtime($lessPath) > filemtime($cssPath))
 			{
 				if (!is_readable($lessPath))
-					throw new CException('Failed to compile LESS. Source path must be readable.');
+				{
+					$errorPath = ($lessPath === false)? ($this->basePath . DIRECTORY_SEPARATOR . $lessFile) : $lessPath;
+					throw new CException('Failed to compile LESS. Source path must be readable: "'.$errorPath.'".');
+				}
 
-				if (!is_writable(dirname($this->basePath . DIRECTORY_SEPARATOR . $cssFile)))
-					throw new CException('Failed to compile LESS. Destination path must be writable.');
+				if (!is_writable(dirname($cssPath)))
+					throw new CException('Failed to compile LESS. Destination path must be writable: "'.$cssPath.'".');
 
 				$this->compileFile($lessPath, $cssPath);
 			}
