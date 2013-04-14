@@ -27,7 +27,7 @@ class LessServerCompiler extends LessCompiler
 	/**
 	 * @var string absolute path to the compiler.
 	 */
-	public $compilerPath;
+	public $compilerPath = 'lessc';
 	/**
 	 * @var boolean whether to force evaluation of imports.
 	 */
@@ -83,10 +83,16 @@ class LessServerCompiler extends LessCompiler
 					|| filemtime($lessPath) > filemtime($cssPath))
 			{
 				if (!is_readable($lessPath))
-					throw new CException('Failed to compile LESS. Source path must be readable.');
+				{
+					$errorPath = ($lessPath === false)? ($this->basePath . DIRECTORY_SEPARATOR . $lessFile) : $lessPath;
+					throw new CException('Failed to compile LESS. Source path must be readable: "'.$errorPath.'".');
+				}
 
-				if (!is_writable(dirname($this->basePath . DIRECTORY_SEPARATOR . $cssFile)))
-					throw new CException('Failed to compile LESS. Destination path must be writable.');
+				if (!file_exists($cssPath))
+					touch($cssPath);
+
+				if (!is_writable($cssPath))
+					throw new CException('Failed to compile LESS. Destination path must be writable: "'.$cssPath.'".');
 
 				$this->compileFile($lessPath, $cssPath);
 			}
@@ -122,14 +128,19 @@ class LessServerCompiler extends LessCompiler
 		if ($this->relativeUrls === true)
 			$options[] = '--relative-urls';
 
-		$command = '"' . $this->nodePath . '" "' . $this->compilerPath . '" '
-				. implode(' ', $options) . ' "' . $lessPath . '" "' . $cssPath . '"';
+		$nodePath = $this->nodePath? '"' . $this->nodePath . '" ' : '';
+		$command = $nodePath . '"' . $this->compilerPath . '" '
+			. implode(' ', $options) . ' "' . $lessPath . '" "' . $cssPath . '"';
 
 		$return = 0;
 		$output = array();
 		@exec($command, $output, $return);
 
+		if ($return == 2)
+			$return = '2: Write error';
+
 		if ($return !== 0)
-			throw new CException('Failed to compile file "' . $lessPath . '" using command: ' . $command);
+			throw new CException(
+				'Failed to compile file "' . $lessPath . '" using command: ' . $command . '. Return was: [' . $return . '] ' . implode("\n", $output));
 	}
 }
