@@ -88,7 +88,10 @@ class LessServerCompiler extends LessCompiler
 					throw new CException('Failed to compile LESS. Source path must be readable: "'.$errorPath.'".');
 				}
 
-				if (!is_writable(dirname($cssPath)))
+				if (!file_exists($cssPath))
+					touch($cssPath);
+
+				if (!is_writable($cssPath))
 					throw new CException('Failed to compile LESS. Destination path must be writable: "'.$cssPath.'".');
 
 				$this->compileFile($lessPath, $cssPath);
@@ -133,8 +136,11 @@ class LessServerCompiler extends LessCompiler
 		$output = array();
 		@exec($command, $output, $return);
 
+		if ($return == 2)
+			$return = '2: Write error';
+
 		if ($return !== 0)
 			throw new CException(
-				'Failed to compile file "' . $lessPath . '" using command: ' . $command . '. Return was: ' . $return);
+				'Failed to compile file "' . $lessPath . '" using command: ' . $command . '. Return was: [' . $return . '] ' . implode("\n", $output));
 	}
 }
