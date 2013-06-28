@@ -77,10 +77,7 @@ class LessServerCompiler extends LessCompiler
 			$lessPath = realpath($this->basePath . DIRECTORY_SEPARATOR . $lessFile);
 			$cssPath = str_replace('/', DIRECTORY_SEPARATOR, $this->basePath . DIRECTORY_SEPARATOR . $cssFile);
 
-			if ($this->forceCompile
-					|| !file_exists($lessPath)
-					|| !file_exists($cssPath)
-					|| filemtime($lessPath) > filemtime($cssPath))
+			if ($this->needsCompilation($lessPath, $cssPath))
 			{
 				if (!is_readable($lessPath))
 				{
@@ -99,6 +96,43 @@ class LessServerCompiler extends LessCompiler
 
 			echo CHtml::linkTag('stylesheet', 'text/css', Yii::app()->baseUrl . '/' . $cssFile);
 		}
+	}
+	
+	/**
+	 * Checks whether we need to recompile the specified LESS file.
+	 * @param string $lessPath the path to the LESS file
+	 * @param string $cssPath the path to the CSS file it's compiled to
+	 * @return boolean whether we need to recompile it
+	 */
+	private function needsCompilation($lessPath, $cssPath)
+	{
+		/**
+		 * Checks whether $subject has been modified since $reference was
+		 */
+		$isNewer = function($subject, $reference) {
+			return filemtime($subject) > filemtime($reference);
+		};
+
+		// Check for obvious cases
+		if ($this->forceCompile || !file_exists($lessPath) 
+				|| !file_exists($cssPath) || $isNewer($lessPath, $cssPath))
+		{
+			return true;
+		}
+
+		// Check if any imported file has changed
+		$lessContent = file_get_contents($lessPath);
+		preg_match_all('/(?<=@import)\s+"([^"]+)/im', $lessContent, $imports);
+
+		foreach ($imports[1] as $import)
+		{
+			$importPath = realpath(dirname($lessPath).DIRECTORY_SEPARATOR.$import);
+
+			if (file_exists($importPath) && $isNewer($importPath, $cssPath))
+				return true;
+		}
+
+		return false;
 	}
 
 	/**
