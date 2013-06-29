@@ -120,7 +120,29 @@ class LessServerCompiler extends LessCompiler
 			return true;
 		}
 
-		// Check if any imported file has changed
+		// Finally, check if any imported file has changed
+		return $this->checkImports($lessPath, $cssPath, $isNewer);
+	}
+	
+	/**
+	 * Checks for import statements in the specified LESS file and checks each 
+	 * of them and their imports recursively for changes since the specified 
+	 * CSS file was changed. The checking is done by the passed callback.
+	 * @staticvar boolean $needsRecompile needed to keep track of when we 
+	 * should break out of the recursion
+	 * @param string $lessPath the LESS file
+	 * @param string $cssPath the CSS file
+	 * @param mixed $callback the function that will check if recompilation is 
+	 * needed
+	 * @return boolean whether the LESS needs to be recompiled
+	 */
+	private function checkImports($lessPath, $cssPath, $callback)
+	{
+		static $needsRecompile = false;
+
+		if ($needsRecompile)
+			return $needsRecompile;
+
 		$lessContent = file_get_contents($lessPath);
 		preg_match_all('/(?<=@import)\s+"([^"]+)/im', $lessContent, $imports);
 
@@ -128,11 +150,19 @@ class LessServerCompiler extends LessCompiler
 		{
 			$importPath = realpath(dirname($lessPath).DIRECTORY_SEPARATOR.$import);
 
-			if (file_exists($importPath) && $isNewer($importPath, $cssPath))
-				return true;
+			if (file_exists($importPath))
+			{
+				if ($callback($importPath, $cssPath))
+				{
+					$needsRecompile = true;
+					break;
+				}
+				else
+					$needsRecompile = $this->checkImports($importPath, $cssPath, $callback);
+			}
 		}
 
-		return false;
+		return $needsRecompile;
 	}
 
 	/**
