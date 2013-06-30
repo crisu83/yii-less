@@ -17,8 +17,13 @@ Thanks to my friend Sam Stenvall (negge) for providing me with his version of th
 
 ### Setup
 
-Download the latest version, unzip the extension under ***protected/extensions/less*** and add the less component to your application configuration. 
+Download the latest version, unzip the extension under ***protected/extensions/less*** and add the desired component (client or server) to your application configuration. 
 Below you can find example configurations for both compilers.
+
+Once the component is loaded all specified LESS files will be compiled (as long 
+as they have changed or forceCompile is enabled) which makes it a good 
+candidate for pre-loading. It is up to you to register 
+the generated CSS files in your layout.
 
 #### Client-side
 
@@ -27,8 +32,7 @@ return array(
   'components'=>array(
     .....
     'less'=>array(
-      'class'=>'ext.less.components.Less',
-      'mode'=>'client'
+      'class'=>'ext.less.components.LessClientCompiler',
       'files'=>array(
         'less/styles.less'=>'css/styles.css',
       ),
@@ -46,15 +50,12 @@ When you have installed Node.js use npm (Node Packaged Modules) to install the l
 return array(
   'components'=>array(
     'less'=>array(
-      'class'=>'ext.less.components.Less',
-      'mode'=>'server'
+      'class'=>'ext.less.components.LessServerCompiler',
       'files'=>array(
         'less/styles.less'=>'css/styles.css',
       ),
-      'options'=>array(
-        'nodePath'=>'path/to/node.exe',
-        'compilerPath'=>'path/to/lessc',
-      ),
+      'nodePath'=>'path/to/node.exe',
+      'compilerPath'=>'path/to/lessc',
     ),
   ),
 );
@@ -68,19 +69,16 @@ Below you can find a list of the available configurations (with default values) 
 
 ```php
 'less'=>array(
-  'class'=>'ext.less.components.Less',
-  'mode'=>'client' // client or server
+  'class'=>'ext.less.components.LessClientCompiler',
   'files'=>array( // files to compile (relative from your base path)
     'less/styles.less'=>'css/styles.css',
   ),
-  'options'=>array( // compiler options
-    'env'=>'production', // compiler environment, either production or development
-    'async'=>false, // load imports asynchronous?
-    'fileAsync'=>false, // load imports asynchronous when in a page under a file protocol
-    'poll'=>1000, // when in watch mode, time in ms between polls
-    'dumpLineNumbers'=>'mediaQuery', // enables debugging, set to comments, mediaQuery or all
-    'watch'=>true, // enable watch mode?
-  ),
+  'env'=>'production', // compiler environment, either production or development
+  'async'=>false, // load imports asynchronous?
+  'fileAsync'=>false, // load imports asynchronous when in a page under a file protocol
+  'poll'=>1000, // when in watch mode, time in ms between polls
+  'dumpLineNumbers'=>'mediaQuery', // enables debugging, set to comments, mediaQuery or all
+  'watch'=>true, // enable watch mode?
 ),
 ```
 
@@ -88,31 +86,16 @@ Below you can find a list of the available configurations (with default values) 
 
 ```php
 'less'=>array(
-  'class'=>'ext.less.components.Less',
-  'mode'=>'server' // client or server
+  'class'=>'ext.less.components.LessServerCompiler',
   'files'=>array( // files to compile (relative from your base path)
     'less/styles.less'=>'css/styles.css',
   ),
-  'options'=>array( // compiler options
-    'basePath'=>'path/to/webroot', // base path, defaults to webroot
-    'nodePath'=>'path/to/node.exe', // absolute path to nodejs executable
-    'compilerPath'=>'path/to/lessc', // absolute path to lessc
-    'strictMode'=>false, // force evaluation of imports?
-    'compression'=>false, // enable compression, either whitespace or yui
-    'optimizationLevel'=>false, // parser optimization level, set to 0, 1 or 2
-    'forceCompile'=>false, // compile files on each request?
-  ),
+  'basePath'=>'path/to/webroot', // base path, defaults to webroot
+  'nodePath'=>'path/to/node.exe', // absolute path to nodejs executable
+  'compilerPath'=>'path/to/lessc', // absolute path to lessc
+  'strictImports'=>false, // force evaluation of imports?
+  'compression'=>false, // enable compression, either whitespace or yui
+  'optimizationLevel'=>false, // parser optimization level, set to 0, 1 or 2
+  'forceCompile'=>false, // compile files on each request?
 ),
 ```
-
-### Registering the compiler
-
-When you have everything setup and configured you need to register the compiler.
-To do that, call its register method inside the ***\<head\>*** tag in the layout(s) in which you wish to include the stylesheets.
-
-```php
-<head>
-  <?php Yii::app()->less->register(); ?>
-</head>
-```
-***protected/views/layouts/main.php***

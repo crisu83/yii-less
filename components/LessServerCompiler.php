@@ -7,6 +7,8 @@
  * @license http://www.opensource.org/licenses/bsd-license.php New BSD License
  */
 
+require_once 'LessCompiler.php';
+
 /**
  * Server-side LESS compiler.
  */
@@ -53,7 +55,8 @@ class LessServerCompiler extends LessCompiler
 	 */
 	public function init()
 	{
-		parent::init();
+		if (!isset($this->basePath))
+			$this->basePath = Yii::getPathOfAlias('webroot');
 
 		if ($this->compression !== false
 				&& !in_array($this->compression, array(self::COMPRESSION_WHITESPACE, self::COMPRESSION_YUI)))
@@ -61,6 +64,8 @@ class LessServerCompiler extends LessCompiler
 
 		if ($this->optimizationLevel !== false && !in_array($this->optimizationLevel, array(0, 1, 2)))
 			throw new CException('Failed to initialize LESS compiler. Property optimizationLevel must be 0, 1 or 2.');
+		
+		parent::init();
 	}
 
 	/**
@@ -69,9 +74,6 @@ class LessServerCompiler extends LessCompiler
 	 */
 	public function run()
 	{
-		if (!isset($this->basePath))
-			$this->basePath = Yii::getPathOfAlias('webroot');
-
 		foreach ($this->files as $lessFile => $cssFile)
 		{
 			$lessPath = realpath($this->basePath . DIRECTORY_SEPARATOR . $lessFile);
@@ -93,8 +95,6 @@ class LessServerCompiler extends LessCompiler
 
 				$this->compileFile($lessPath, $cssPath);
 			}
-
-			echo CHtml::linkTag('stylesheet', 'text/css', Yii::app()->baseUrl . '/' . $cssFile);
 		}
 	}
 	
