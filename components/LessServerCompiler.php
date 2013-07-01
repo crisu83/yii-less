@@ -87,12 +87,6 @@ class LessServerCompiler extends LessCompiler
 					throw new CException('Failed to compile LESS. Source path must be readable: "'.$errorPath.'".');
 				}
 
-				if (!file_exists($cssPath))
-					touch($cssPath);
-
-				if (!is_writable($cssPath))
-					throw new CException('Failed to compile LESS. Destination path must be writable: "'.$cssPath.'".');
-
 				$this->compileFile($lessPath, $cssPath);
 			}
 		}
@@ -192,19 +186,26 @@ class LessServerCompiler extends LessCompiler
 		if ($this->relativeUrls === true)
 			$options[] = '--relative-urls';
 
+		// 2>&1 at the end redirects STDERR (where error's appear) to STDOUT 
+		// (which is returned by shell_exec())
 		$nodePath = $this->nodePath? '"' . $this->nodePath . '" ' : '';
 		$command = $nodePath . '"' . $this->compilerPath . '" '
-			. implode(' ', $options) . ' "' . $lessPath . '" "' . $cssPath . '"';
+			. implode(' ', $options) . ' "' . $lessPath . '" "' . $cssPath . '" 2>&1';
 
 		$return = 0;
 		$output = array();
 		@exec($command, $output, $return);
 
-		if ($return == 2)
-			$return = '2: Write error';
-
-		if ($return !== 0)
-			throw new CException(
-				'Failed to compile file "' . $lessPath . '" using command: ' . $command . '. Return was: [' . $return . '] ' . implode("\n", $output));
+		switch ($return) 
+		{
+			case 2:
+				throw new CException('Failed to compile LESS. Destination path must be writable: "' . $cssPath);
+			case 1:
+				// Replace shell color codes in the output
+				$output = preg_replace('/\[[0-9]+m/i', '', implode("\n", $output));
+				
+				throw new CException(
+					'Failed to compile file "' . $lessPath . '" using command: ' . $command . '. The error was: ' . $output);
+		}
 	}
 }
