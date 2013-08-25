@@ -199,7 +199,6 @@ class LessServerCompiler extends LessCompiler
 		switch ($return) 
 		{
 			case 2:
-				throw new CException('Failed to compile LESS. Destination path must be writable: "' . $cssPath);
 			case 1:
 				// Replace shell color codes in the output
 				$output = preg_replace('/\[[0-9]+m/i', '', implode("\n", $output));
