@@ -45,12 +45,12 @@ EOS;
 
         echo "\nChecking output folder(s) and permissions for LESS compiler...\n";
         foreach ($component->files AS $file) {
-            $file = realpath(Yii::getPathOfAlias('webroot') . DIRECTORY_SEPARATOR . $file);
-            $dir  = dirname($file);
+            $file = Yii::getPathOfAlias('webroot') . DIRECTORY_SEPARATOR . $file;
+            $dir  = realpath(dirname($file));
             if (is_dir($dir)) {
                 $file = realpath($file);
                 @chmod($dir, 0777);
-                chmod($file, 0777);
+                @chmod($file, 0777);
                 echo "\nUpdated permissions in '{$dir}'.\n";
             }
             else {
@@ -60,7 +60,7 @@ EOS;
                     echo "\nAdded output folder '{$dir}'.\n";
                 }
                 else {
-                    echo "\nError while updating directory for '{$file}'...\n";
+                    echo "\nError while updating directory for '{$dir}'...\n";
                 }
             }
         }
