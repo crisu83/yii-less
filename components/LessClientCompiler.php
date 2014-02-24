@@ -75,10 +75,6 @@ class LessClientCompiler extends LessCompiler
 	 */
 	public function run()
 	{
-		$app = Yii::app();
-		foreach (array_keys($this->files) as $lessFile)
-			echo CHtml::linkTag('stylesheet/less', 'text/css', $app->baseUrl . '/' . $lessFile);
-
 		$settings = array(
 			'env' => $this->env,
 			'async' => $this->async,
@@ -88,8 +84,11 @@ class LessClientCompiler extends LessCompiler
 			'rootpath' => $this->rootPath,
 		);
 
+		$app = Yii::app();
 		/* @var $cs CClientScript */
 		$cs = $app->getClientScript();
+		foreach (array_keys($this->files) as $lessFile)
+			$cs->registerLinkTag('stylesheet/less', 'text/css', $app->baseUrl . '/' . $lessFile);
 		$cs->registerScript(__CLASS__ . '.settings', 'less = ' . CJSON::encode($settings) . ';', CClientScript::POS_HEAD);
 		$cs->registerScriptFile($this->getAssetsUrl().'/less.min.js', CClientScript::POS_END);
 
